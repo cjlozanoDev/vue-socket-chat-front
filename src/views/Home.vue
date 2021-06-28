@@ -1,18 +1,23 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <h1>Chat Vue js + VueSocketIO</h1>
+    <div class="home__form">
+      <FormEntryChat />
+    </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
 import VueSocketIO from "vue-socket.io";
 import Vue from "vue";
+import FormEntryChat from "../components/FormEntryChat.vue";
 
 export default {
   name: "Home",
+  components: {
+    FormEntryChat,
+  },
   created() {
     Vue.use(
       new VueSocketIO({
@@ -21,8 +26,12 @@ export default {
       })
     );
   },
-  components: {
-    HelloWorld,
-  },
 };
 </script>
+
+<style scoped>
+.home {
+  background: #42b983;
+  height: 100%;
+}
+</style>
