@@ -33,5 +33,10 @@ export default {
 .home {
   background: #42b983;
   height: 100%;
+  padding: 20px;
+}
+.home__form {
+  display: flex;
+  justify-content: center;
 }
 </style>
