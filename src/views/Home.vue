@@ -2,7 +2,7 @@
   <div class="home">
     <h1>Chat Vue js + VueSocketIO</h1>
     <div class="home__form">
-      <FormEntryChat />
+      <FormEntryChat @send-info="sendInfo" />
     </div>
   </div>
 </template>
@@ -25,6 +25,11 @@ export default {
         connection: "http://192.168.1.50:3000/",
       })
     );
+  },
+  methods: {
+    sendInfo({ name, roomName }) {
+      console.log(name, roomName);
+    },
   },
 };
 </script>
