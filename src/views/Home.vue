@@ -9,8 +9,6 @@
 
 <script>
 // @ is an alias to /src
-import VueSocketIO from "vue-socket.io";
-import Vue from "vue";
 import FormEntryChat from "../components/FormEntryChat.vue";
 
 export default {
@@ -18,17 +16,15 @@ export default {
   components: {
     FormEntryChat,
   },
-  created() {
-    Vue.use(
-      new VueSocketIO({
-        debug: true,
-        connection: "http://192.168.1.50:3000/",
-      })
-    );
-  },
   methods: {
     sendInfo({ name, roomName }) {
-      console.log(name, roomName);
+      this.$router.push({
+        name: "RoomChat",
+        params: {
+          nombreSala: roomName,
+          nameUser: name,
+        },
+      });
     },
   },
 };

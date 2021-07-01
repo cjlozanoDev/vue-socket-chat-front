@@ -9,7 +9,12 @@
         <input v-model="name" type="text" placeholder="Nombre de usuario" />
       </p>
       <p>
-        <input v-model="roomName" type="text" placeholder="Sala de chat" />
+        <select v-model="roomName">
+          <option disabled value="">Selecciona una sala</option>
+          <option value="General">General</option>
+          <option value="Carlos Javier">Carlos Javier</option>
+          <option value="Mili">Mili</option>
+        </select>
       </p>
       <p>
         <input class="input_submit" type="submit" value="Entrar al chat" />
@@ -30,7 +35,7 @@ export default {
   data() {
     return {
       name: null,
-      roomName: null,
+      roomName: "",
       errors: [],
     };
   },
@@ -46,7 +51,7 @@ export default {
         this.errors.push("El nombre es obligatorio");
       }
       if (!this.roomName || this.roomName === "") {
-        this.errors.push("El nombre de sala es obligatorio");
+        this.errors.push("La sala es obligatoria");
       }
       return this.errors.length ? false : true;
     },
@@ -60,7 +65,8 @@ export default {
   width: 100%;
   border: 1px solid #2c3e50;
 }
-input {
+input,
+select {
   height: 40px;
   width: 80%;
 }

@@ -15,6 +15,7 @@ const routes = [
     path: "/roomchat/:nombreSala?",
     name: "RoomChat",
     component: RoomChat,
+    props: true,
   },
   {
     path: "/about",
