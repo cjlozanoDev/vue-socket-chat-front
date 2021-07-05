@@ -27,9 +27,6 @@
 </template>
 
 <script>
-import VueSocketIO from "vue-socket.io";
-import Vue from "vue";
-
 export default {
   name: "RoomChat",
   props: {
@@ -48,9 +45,11 @@ export default {
     const existValues = this.checkExistValues();
 
     if (existValues) {
-      this.connectionSocket();
       this.listenersSockets();
     }
+  },
+  destroyed() {
+    this.$socket.emit("disconnect", null);
   },
   methods: {
     checkExistValues() {
@@ -63,15 +62,14 @@ export default {
       }
       return true;
     },
-    connectionSocket() {
-      Vue.use(
-        new VueSocketIO({
-          debug: true,
-          connection: "http://192.168.1.50:3000/",
-        })
-      );
-    },
     listenersSockets() {
+      this.$socket.on("listUsers", (data) => {
+        console.log("estoy dentro");
+        this.users = data;
+      });
+      this.sockets.subscribe("listUsers", (data) => {
+        this.users = data;
+      });
       this.$socket.emit(
         "entryChat",
         { name: this.nameUser, room: this.nameRoom },
