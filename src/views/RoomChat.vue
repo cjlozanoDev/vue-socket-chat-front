@@ -20,7 +20,23 @@
             {{ nameRoom }}
           </span>
         </div>
-        <div class="room-chat__box__main__messages"></div>
+        <div class="room-chat__box__main__messages">
+          <div v-for="message in messages" :key="message.date">
+            <div v-if="message.name === 'Administrador'" class="message_admin">
+              {{ message.message }}
+            </div>
+          </div>
+        </div>
+        <div class="room-chat__box__main__actions">
+          <input
+            class="room-chat__box__main__actions__input"
+            type="text"
+            placeholder="Escribe un mensaje"
+          />
+          <button>
+            <span class="material-icons"> send </span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -65,6 +81,7 @@ export default {
     },
     listenersSockets() {
       this.sockets.subscribe("listUsers", (data) => {
+        console.log(data);
         this.users = data;
       });
       this.sockets.subscribe("createMessage", (data) => {
@@ -89,7 +106,6 @@ export default {
   padding: 20px;
 }
 .room-chat__box {
-  position: relative;
   background: #fff;
   display: flex;
   width: 100%;
@@ -109,6 +125,8 @@ export default {
 }
 .room-chat__box__main {
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 .room-chat__box__main__header {
   display: flex;
@@ -126,6 +144,22 @@ export default {
   white-space: nowrap;
   font-size: 1.1em;
 }
+.room-chat__box__main__messages {
+  position: relative;
+  height: 80%;
+}
+.room-chat__box__main__actions {
+  display: flex;
+  margin-top: auto;
+  gap: 8px;
+  padding: 15px;
+  width: 100%;
+}
+.room-chat__box__main__actions__input {
+  height: 38px;
+  width: 100%;
+  margin-right: 8px;
+}
 .user_name {
   white-space: nowrap;
 }
@@ -137,5 +171,12 @@ export default {
   background-size: cover;
   background-position: top center;
   border-radius: 50%;
+}
+.message_admin {
+  display: flex;
+  justify-content: center;
+  color: #70757a;
+  font-size: 0.9em;
+  padding: 10px;
 }
 </style>

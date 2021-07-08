@@ -2,6 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import "./resources/css/main.css";
+import "material-design-icons/iconfont/material-icons.css";
 
 import VueSocketIO from "vue-socket.io";
 
