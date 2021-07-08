@@ -39,6 +39,7 @@ export default {
     return {
       nameRoom: "",
       users: [],
+      messages: [],
     };
   },
   created() {
@@ -63,12 +64,11 @@ export default {
       return true;
     },
     listenersSockets() {
-      this.$socket.on("listUsers", (data) => {
-        console.log("estoy dentro");
-        this.users = data;
-      });
       this.sockets.subscribe("listUsers", (data) => {
         this.users = data;
+      });
+      this.sockets.subscribe("createMessage", (data) => {
+        this.messages.push(data);
       });
       this.$socket.emit(
         "entryChat",
