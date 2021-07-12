@@ -21,19 +21,41 @@
           </span>
         </div>
         <div class="room-chat__box__main__messages">
-          <div v-for="message in messages" :key="message.date">
+          <div
+            v-for="message in messages"
+            :key="message.date"
+            :class="{
+              'room_chat__box__main__messages__general-me': message.me,
+              'room_chat__box__main__messages__general-not-me': !message.me,
+            }"
+          >
             <div v-if="message.name === 'Administrador'" class="message_admin">
+              {{ message.message }}
+            </div>
+
+            <div
+              v-if="message.name != 'Administrador' && message.me"
+              class="box-message message_me"
+            >
+              {{ message.message }}
+            </div>
+
+            <div
+              v-if="message.name != 'Administrador' && !message.me"
+              class="box-message message_not_me"
+            >
               {{ message.message }}
             </div>
           </div>
         </div>
         <div class="room-chat__box__main__actions">
           <input
+            v-model="textMessage"
             class="room-chat__box__main__actions__input"
             type="text"
             placeholder="Escribe un mensaje"
           />
-          <button>
+          <button :disabled="textMessage === ''" @click="sendMessage">
             <span class="material-icons"> send </span>
           </button>
         </div>
@@ -56,6 +78,7 @@ export default {
       nameRoom: "",
       users: [],
       messages: [],
+      textMessage: "",
     };
   },
   created() {
@@ -85,13 +108,35 @@ export default {
         this.users = data;
       });
       this.sockets.subscribe("createMessage", (data) => {
-        this.messages.push(data);
+        const message = {
+          message: data.message,
+          name: data.name,
+          me: false,
+          date: data.date,
+        };
+        this.messages.push(message);
       });
       this.$socket.emit(
         "entryChat",
         { name: this.nameUser, room: this.nameRoom },
         (data) => {
           this.users = data;
+        }
+      );
+    },
+    sendMessage() {
+      this.$socket.emit(
+        "createMessage",
+        { message: this.textMessage },
+        (data) => {
+          const message = {
+            message: data.message,
+            name: data.name,
+            me: true,
+            date: data.date,
+          };
+          this.messages.push(message);
+          this.textMessage = "";
         }
       );
     },
@@ -145,8 +190,38 @@ export default {
   font-size: 1.1em;
 }
 .room-chat__box__main__messages {
+  overflow-y: auto;
   position: relative;
   height: 80%;
+}
+.box-message {
+  display: flex;
+  padding: 10px;
+  border: 1px solid #000;
+  border-radius: 13px;
+  margin: 3px;
+  max-width: 90%;
+}
+.room_chat__box__main__messages__general-me,
+.room_chat__box__main__messages__general-not-me {
+  display: flex;
+  width: 100%;
+}
+.room_chat__box__main__messages__general-me {
+  justify-content: flex-end;
+}
+.room_chat__box__main__messages__general-not-me {
+  justify-content: flex-start;
+}
+.box-message.message_me {
+  text-align: right;
+  background: darkgreen;
+  color: #fff;
+}
+.box-message.message_not_me {
+  text-align: left;
+  background: darkgrey;
+  color: #fff;
 }
 .room-chat__box__main__actions {
   display: flex;
