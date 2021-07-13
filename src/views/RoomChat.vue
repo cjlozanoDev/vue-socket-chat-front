@@ -44,6 +44,9 @@
               v-if="message.name != 'Administrador' && !message.me"
               class="box-message message_not_me"
             >
+              <div class="name-text-message">
+                {{ message.name }}
+              </div>
               {{ message.message }}
             </div>
           </div>
@@ -108,13 +111,7 @@ export default {
         this.users = data;
       });
       this.sockets.subscribe("createMessage", (data) => {
-        const message = {
-          message: data.message,
-          name: data.name,
-          me: false,
-          date: data.date,
-        };
-        this.messages.push(message);
+        this.addMessage(data, false);
       });
       this.$socket.emit(
         "entryChat",
@@ -129,16 +126,19 @@ export default {
         "createMessage",
         { message: this.textMessage },
         (data) => {
-          const message = {
-            message: data.message,
-            name: data.name,
-            me: true,
-            date: data.date,
-          };
-          this.messages.push(message);
+          this.addMessage(data, true);
           this.textMessage = "";
         }
       );
+    },
+    addMessage(data, me) {
+      const message = {
+        message: data.message,
+        name: data.name,
+        me,
+        date: data.date,
+      };
+      this.messages.push(message);
     },
   },
 };
@@ -193,14 +193,20 @@ export default {
   overflow-y: auto;
   position: relative;
   height: 80%;
+  padding: 10px;
 }
 .box-message {
   display: flex;
+  flex-direction: column;
   padding: 10px;
   border: 1px solid #000;
   border-radius: 13px;
   margin: 3px;
   max-width: 90%;
+}
+.name-text-message {
+  color: #000;
+  margin-bottom: 5px;
 }
 .room_chat__box__main__messages__general-me,
 .room_chat__box__main__messages__general-not-me {
@@ -249,6 +255,7 @@ export default {
 }
 .message_admin {
   display: flex;
+  width: 100%;
   justify-content: center;
   color: #70757a;
   font-size: 0.9em;
