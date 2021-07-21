@@ -85,6 +85,7 @@ export default {
     };
   },
   created() {
+    document.addEventListener("keyup", this.keyEnter);
     const existValues = this.checkExistValues();
 
     if (existValues) {
@@ -95,6 +96,13 @@ export default {
     this.$socket.emit("disconnect", null);
   },
   methods: {
+    keyEnter(event) {
+      if (event.key === "Enter") {
+        if (this.textMessage !== "") {
+          this.sendMessage();
+        }
+      }
+    },
     checkExistValues() {
       this.nameRoom = this.$route.params.nombreSala;
       if (!this.nameRoom || !this.nameUser) {
